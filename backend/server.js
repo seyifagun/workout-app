@@ -1,8 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
-
-//
+const mongoose = require('mongoose');
 const workoutRoutes = require('./routes/workouts')
 
 //express app
@@ -19,7 +18,16 @@ app.use((req, res, next) => {
 // respond to request || routes
 app.use('/api/workouts', workoutRoutes);
 
-//listen to request
-app.listen(`${process.env.PORT}`, () => {
-    console.log(`server now running on port ${process.env.PORT}`)
-});
+// connect to db 
+// NOTE :: .connect() method is an async fn, hence, it returns a promise
+// NOTE :: we only want to listen to the request only when we are connected to the db
+// ....hence, the reason why app.listen() is returned 
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    //listen to request
+    app.listen(`${process.env.PORT}`, () => {
+        console.log(`connected to db & server now running on port ${process.env.PORT}`)
+    });
+}).catch((errr) => {
+    console.log('error', errr);
+})
+
