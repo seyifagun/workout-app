@@ -5,6 +5,7 @@ const WorkoutForm = () => {
 const [title, setTitle] = useState('');
 const [load, setLoad] = useState('');
 const [reps, setReps] = useState('');
+const [error, setError] = useState(null);
 
 const handleSubmit = async(e) => {
     //prevent submit of form on load of page
@@ -13,9 +14,25 @@ const handleSubmit = async(e) => {
     const workout = {title, load, reps}
     const response = await fetch('/api/workouts', {
         method: 'POST',
-        //JSONA
-        body: JSON.stringify(workout)
+        //JSON
+        body: JSON.stringify(workout),
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
+    //get back json
+    const json =  await response.json()
+
+    if(!response.ok) {
+        setError(json.error)
+    }
+    if(response.ok) {
+        setTitle('')
+        setLoad('')
+        setReps('')
+        setError(null)
+        console.log('null workout added', json)
+    }
 }
 
   return (
@@ -43,6 +60,7 @@ const handleSubmit = async(e) => {
             value={reps} 
         />
         <button>Add Workout</button>
+        {error && <div className='error'>{error}</div>}
     </form>
   )
 }

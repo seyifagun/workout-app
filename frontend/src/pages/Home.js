@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 //component
 import WorkoutDetails from "../components/WorkoutDetails";
+import WorkoutForm from "../components/WorkoutForm";
 const Home = () => {
     const [workouts, setWorkouts] = useState(null);
     // fetch data from API on the backend when page renders
@@ -27,6 +28,7 @@ const Home = () => {
                     <WorkoutDetails key={workout._id} workout={workout} />
                 ))}
             </div>
+            <WorkoutForm />
         </div>
     )
 }
